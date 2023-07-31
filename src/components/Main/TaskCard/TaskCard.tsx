@@ -11,7 +11,7 @@ function TaskCard({cardName}: { cardName: string }) {
     function clickButton() {
         // setActive((prev) => !prev);
         if (!active) {
-            setActive(true)
+            setActive(true);
         } else {
             setTasks((prev) => [...prev, ref.current!.value]);
             setActive(false);
@@ -28,7 +28,7 @@ function TaskCard({cardName}: { cardName: string }) {
         <div className={s.cardContainer}>
             <div className={s.root}>
                 <span>{cardName}</span>
-                {tasks && tasks.map((task) => <TaskList value={task}/>)}
+                {tasks && tasks.map((task) => <TaskList value={task} tasksCounter={tasks.length}/>)}
                 {active &&
                   <form onSubmit={handleSubmit}>
                     <input type='text' className={s.input} ref={ref} />
