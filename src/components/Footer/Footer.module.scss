@@ -1,0 +1,21 @@
+.root {
+  width: 100%;
+  background-color: #0067A3;
+  height: 55px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .tasksCounter {
+    display: flex;
+    gap: 20px;
+    margin-left: 10px;
+  }
+
+  .accountHolder {
+    margin-right: 10px;
+  }
+}

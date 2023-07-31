@@ -1,0 +1,22 @@
+.root {
+  display: flex;
+  justify-content: right;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+    background-color: white;
+    border-radius: 50%;
+  }
+
+  .arrowDown, .arrowUp {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .arrowUp {
+    transform: rotate(180deg);
+  }
+}
+
