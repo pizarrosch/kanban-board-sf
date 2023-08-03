@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import s from './TaskList.module.scss';
 
-function TaskList({value, tasksCounter}: {value: string, tasksCounter: number}) {
-
-    const [activeTasksCounter, setActiveTasksCounter] = useState(0);
+function TaskList({value}: {value: string}) {
 
     return (
         <div className={s.root}>{value}</div>
