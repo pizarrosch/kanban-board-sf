@@ -1,17 +1,14 @@
 import React from 'react';
 import s from './MainContainer.module.scss';
-import TaskCard from "./TaskCard/TaskCard";
+import Column from "../Column/Column";
+import {ColumnType} from "../../types";
 
-let cardNames: string[] = ['Backlog', 'Ready', 'In Progress', 'Finished'];
 function MainContainer() {
-    return (
-        <div className={s.container}>
-            {cardNames.map((cardName: string) => {
-                return <TaskCard cardName={cardName}/>
-            })
-            }
-        </div>
-    )
+  return (
+    <div className={s.container}>
+      {Object.keys(ColumnType).map(key => <Column type={ColumnType[key]} />)}
+    </div>
+  )
 }
 
 export default MainContainer;
