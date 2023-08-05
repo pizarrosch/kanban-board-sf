@@ -1,21 +1,9 @@
-import {MouseEventHandler} from "react";
+export const Columns = ['backlog', 'ready', 'progress', 'finished'] as const;
 
-export type ShowMenuType = {
-    showMenu: boolean,
-    onClick: MouseEventHandler<HTMLImageElement>
-}
-
-export type TicketStatusType = 'backlog' | 'ready' | 'progress' | 'finished';
+export type ColumnType = typeof Columns[number];
 
 export type TicketType = {
     title: string;
     description: string;
-    status: keyof typeof ColumnType;
-}
-
-export enum ColumnType {
-    backlog = 'Backlog',
-    ready = 'Ready',
-    progress = 'In Progress',
-    finished = 'Finished'
+    type: ColumnType;
 }

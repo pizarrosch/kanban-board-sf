@@ -1,7 +1,11 @@
 import React from 'react';
 import s from './Footer.module.scss';
 
-function Footer({backlogTasksCounter}: {backlogTasksCounter: number }) {
+type Props = {
+  backlogTasksCounter?: number
+}
+
+function Footer({backlogTasksCounter = 0}: Props) {
     return (
         <div className={s.root}>
             <div className={s.tasksCounter}>

@@ -1,8 +1,7 @@
 import React, {createContext, Dispatch, SetStateAction, useState} from 'react';
-import './App.scss';
 import Header from "./components/Header/Header";
-import s from './App.scss';
-import MainContainer from "./components/Main/MainContainer";
+import s from './App.module.scss';
+import MainContainer from "./components/MainContainer/MainContainer";
 import Footer from "./components/Footer/Footer";
 import {TicketType} from "./types";
 
@@ -17,13 +16,7 @@ export const StoreContext = createContext<ContextType>({
 });
 
 function App() {
-    const [tickets, setTickets] = useState<Array<TicketType>>([
-      {
-        title: 'Milk',
-        description: 'Buy some milk in the local store',
-        status: 'ready'
-      }
-    ]);
+    const [tickets, setTickets] = useState<Array<TicketType>>([]);
 
     return (
         <div className={s.root}>
