@@ -1,27 +1,42 @@
-.root {
-  padding: 10px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, .85);
-  min-width: 250px;
-}
+  .root {
+    //margin-left: 20px;
+    width: 282px;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    background-color: #EBECF0;
+    border-radius: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    gap: 7px;
 
-.button {
-  background: #6fdc74;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
+    .title {
+      font-size: 18px;
+      font-weight: 400;
+      margin: 10px 0;
+    }
 
-  &:hover {
-    opacity: 0.9;
+    .addCard {
+      color: #5E6C84;
+      cursor: pointer;
+      font-family: 'Roboto', sans-serif;
+      font-size: 18px;
+    }
+
+    .input {
+      height: 35px;
+      box-sizing: border-box;
+      border-radius: 2px;
+      border: none;
+      padding-inline: 10px;
+      width: 100%;
+      outline: none;
+    }
+
+    .select {
+      outline: none;
+    }
   }
-}
 
-.input {
-  height: 35px;
-  box-sizing: border-box;
-  border-radius: 2px;
-  border: none;
-  padding-inline: 10px;
-  width: 100%;
-}
+
