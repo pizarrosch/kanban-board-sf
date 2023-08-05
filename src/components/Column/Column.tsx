@@ -19,6 +19,7 @@ const titles = {
 function Column({type}: Props) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isSelectActive, setIsSelectActive] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {tickets, setTickets} = useContext(StoreContext);
 
   function renderInput() {
@@ -35,16 +36,19 @@ function Column({type}: Props) {
   }
 
   function renderSelect() {
-    if (type === 'ready' || type ==='progress' ||type =='finished') {
+    if (type === 'ready' || type === 'progress' || type == 'finished') {
       return (
         <select className={s.select} onChange={handleSelect}>
           <option disabled selected>Chose task</option>
           {tickets
             .filter(ticket => {
               switch (type) {
-                case "ready": return ticket.type === 'backlog';
-                case "progress": return ticket.type === 'ready';
-                case "finished": return ticket.type === 'progress';
+                case "ready":
+                  return ticket.type === 'backlog';
+                case "progress":
+                  return ticket.type === 'ready';
+                case "finished":
+                  return ticket.type === 'progress';
               }
             })
             .map(ticket => <option value={ticket.title}>{ticket.title}</option>)
@@ -72,8 +76,9 @@ function Column({type}: Props) {
   function handleSelect(e: ChangeEvent) {
     isSelectActive && setIsSelectActive(false);
     const target = e.target as HTMLSelectElement;
-      switch (type) {
-        case "ready": return setTickets(
+    switch (type) {
+      case "ready":
+        return setTickets(
           [
             ...tickets,
             {
@@ -82,7 +87,8 @@ function Column({type}: Props) {
               description: 'Some dummy static description that\'s being created for any new ticket'
             }
           ]);
-        case "progress": return setTickets(
+      case "progress":
+        return setTickets(
           [
             ...tickets,
             {
@@ -91,7 +97,8 @@ function Column({type}: Props) {
               description: 'Some dummy static description that\'s being created for any new ticket'
             }
           ]);
-        case "finished": return setTickets(
+      case "finished":
+        return setTickets(
           [
             ...tickets,
             {
@@ -100,8 +107,21 @@ function Column({type}: Props) {
               description: 'Some dummy static description that\'s being created for any new ticket'
             }
           ]);
-      }
+    }
   }
+
+    tickets.map(ticket => {
+      if (ticket.type === 'backlog' && ticket.title === '') {
+        switch (type) {
+          case 'ready':
+            return setIsButtonDisabled(true);
+          case 'progress':
+            return setIsButtonDisabled(true);
+          case 'finished':
+            return setIsButtonDisabled(true);
+        }
+      }
+    })
 
   function handleIsInputActive() {
     if (!isInputActive) {
@@ -129,10 +149,10 @@ function Column({type}: Props) {
       </div>
       {isInputActive && renderInput()}
       {isSelectActive && renderSelect()}
-        <div className={s.addCard} onClick={handleIsInputActive}>
-          {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
-          {!isSelectActive && (type !== 'backlog' && '+Add card')}
-        </div>
+      <div className={s.addCard} onClick={handleIsInputActive}>
+        {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
+        {!isSelectActive && (type !== 'backlog' && '+Add card')}
+      </div>
     </div>
   )
 }
