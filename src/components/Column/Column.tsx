@@ -1,9 +1,10 @@
-import React, {ChangeEvent, ChangeEventHandler, KeyboardEvent, useContext, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useContext, useRef, useState} from 'react';
 import Ticket from "../Ticket/Ticket";
 import {StoreContext} from "../../App";
 import {ColumnType} from "../../types";
 import s from "./Column.module.scss";
 import ticket from "../Ticket/Ticket";
+import {logDOM} from "@testing-library/react";
 
 type Props = {
   type: ColumnType;
@@ -21,6 +22,8 @@ function Column({type}: Props) {
   const [isSelectActive, setIsSelectActive] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {tickets, setTickets} = useContext(StoreContext);
+  const ref = useRef<HTMLInputElement|null>(null);
+
 
   function renderInput() {
     if (type === 'backlog') {
@@ -30,6 +33,7 @@ function Column({type}: Props) {
           type='text'
           placeholder='Enter new title'
           onKeyDown={handleInput}
+          ref={ref}
         />
       );
     }
@@ -58,6 +62,16 @@ function Column({type}: Props) {
     }
   }
 
+  function removeTickets() {
+    if (type === "backlog") {
+      tickets.filter(ticket => {
+        switch (type) {
+          case "backlog": return ticket.type !== "ready"
+        }
+      }).map(ticket => console.log(ticket))
+    }
+  }
+
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && e.currentTarget.value !== '') {
       setTickets([
@@ -73,8 +87,22 @@ function Column({type}: Props) {
     }
   }
 
+  function handleInputOnClick() {
+    if (isInputActive) {
+      ref.current && setTickets([
+        ...tickets,
+        {
+          title: ref.current!.value,
+          type: 'backlog',
+          description: 'Some dummy static description that\'s being created for any new ticket'
+        }
+      ]);
+    }
+  }
+
   function handleSelect(e: ChangeEvent) {
     isSelectActive && setIsSelectActive(false);
+    removeTickets()
     const target = e.target as HTMLSelectElement;
     switch (type) {
       case "ready":
@@ -86,7 +114,8 @@ function Column({type}: Props) {
               type: 'ready',
               description: 'Some dummy static description that\'s being created for any new ticket'
             }
-          ]);
+          ]
+        );
       case "progress":
         return setTickets(
           [
@@ -124,8 +153,10 @@ function Column({type}: Props) {
     })
 
   function handleIsInputActive() {
+    handleInputOnClick();
     if (!isInputActive) {
       setIsInputActive(true);
+      ref.current && ref.current!.focus()
     } else {
       setIsInputActive(false);
     }
@@ -136,7 +167,6 @@ function Column({type}: Props) {
       setIsSelectActive(false);
     }
   }
-
 
   return (
     <div className={s.root}>
