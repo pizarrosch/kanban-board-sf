@@ -1,10 +1,11 @@
-import React, {ChangeEvent, KeyboardEvent, useContext, useRef, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useContext, useEffect, useRef, useState} from 'react';
 import Ticket from "../Ticket/Ticket";
 import {StoreContext} from "../../App";
 import {ColumnType} from "../../types";
 import s from "./Column.module.scss";
 import ticket from "../Ticket/Ticket";
 import {logDOM} from "@testing-library/react";
+
 
 type Props = {
   type: ColumnType;
@@ -21,9 +22,10 @@ function Column({type}: Props) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isSelectActive, setIsSelectActive] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [optionValue, setOptionValue] = useState('');
   const {tickets, setTickets} = useContext(StoreContext);
   const ref = useRef<HTMLInputElement|null>(null);
-
+  const [filteredTickets, setFilteredTickets] = useState<Array<string>>([]);
 
   function renderInput() {
     if (type === 'backlog') {
@@ -43,7 +45,7 @@ function Column({type}: Props) {
     if (type === 'ready' || type === 'progress' || type == 'finished') {
       return (
         <select className={s.select} onChange={handleSelect}>
-          <option disabled selected>Chose task</option>
+          <option disabled selected>Choose task</option>
           {tickets
             .filter(ticket => {
               switch (type) {
@@ -62,15 +64,15 @@ function Column({type}: Props) {
     }
   }
 
-  function removeTickets() {
-    if (type === "backlog") {
-      tickets.filter(ticket => {
-        switch (type) {
-          case "backlog": return ticket.type !== "ready"
-        }
-      }).map(ticket => console.log(ticket))
-    }
-  }
+  // function removeTickets() {
+  //   if (type === "backlog") {
+  //     tickets.filter(ticket => {
+  //       switch (type) {
+  //         case "backlog": return ticket.type !== "ready"
+  //       }
+  //     }).map(ticket => console.log(ticket))
+  //   }
+  // }
 
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && e.currentTarget.value !== '') {
@@ -100,10 +102,56 @@ function Column({type}: Props) {
     }
   }
 
+  // function removeTickets() {
+  //   if (type === 'backlog' ) {
+  //     tickets
+  //       .filter(ticket => ticket.title !== optionValue)
+  //       // .map(ticket => {
+  //       //     setTickets([
+  //       //       {
+  //       //         title: ticket.title,
+  //       //         type: ticket.type,
+  //       //         description: 'Some dummy static description that\'s being created for any new ticket'
+  //       //       }
+  //       //     ])
+  //       //   }
+  //       // )
+  //   }
+  // }
+
+  useEffect(() => {
+    if (optionValue) {
+      const filteredTasks:Array<string> = tickets.filter(ticket => ticket.title !== optionValue).map(item => [...item.title].toString());
+      console.log(filteredTasks)
+    }
+    // optionValue &&
+    //       tickets.filter(ticket => {
+    //
+    //         return ticket.title !== optionValue && setTickets([
+    //         {
+    //           title: (!optionValue).toString(),
+    //           type: 'backlog',
+    //           description: 'Hello'
+    //         }
+    //       ]);
+    //     })
+
+        // .map(ticket => {
+        //   setTickets([
+        //     ...tickets,
+        //     {
+        //       title: ticket.title,
+        //       type: 'backlog',
+        //       description: 'Some dummy static description that\'s being created for any new ticket'
+        //     }
+        //   ])
+        // })
+  }, [optionValue])
+
   function handleSelect(e: ChangeEvent) {
     isSelectActive && setIsSelectActive(false);
-    removeTickets()
     const target = e.target as HTMLSelectElement;
+    setOptionValue(target.value);
     switch (type) {
       case "ready":
         return setTickets(
@@ -116,6 +164,7 @@ function Column({type}: Props) {
             }
           ]
         );
+
       case "progress":
         return setTickets(
           [
@@ -169,7 +218,7 @@ function Column({type}: Props) {
   }
 
   return (
-    <div className={s.root}>
+    <div className={s.root} key={type}>
       <h4 className={s.title}>{titles[type]}</h4>
       <div>
         {tickets

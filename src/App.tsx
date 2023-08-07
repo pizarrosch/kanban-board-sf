@@ -2,7 +2,7 @@ import React, {createContext, Dispatch, SetStateAction, useState} from 'react';
 import Header from "./components/Header/Header";
 import MainContainer from "./components/MainContainer/MainContainer";
 import Footer from "./components/Footer/Footer";
-import {TicketType} from "./types";
+import {Columns, TicketType} from "./types";
 
 type ContextType = {
   tickets: Array<TicketType>,
@@ -22,7 +22,7 @@ function App() {
             <Header/>
             <StoreContext.Provider value={{tickets, setTickets}}>
               <MainContainer/>
-              <Footer />
+              {Columns.map(type => <Footer type={type} tickets={tickets}/>)}
             </StoreContext.Provider>
         </div>
     );
