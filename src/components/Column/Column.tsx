@@ -121,8 +121,11 @@ function Column({type}: Props) {
 
   useEffect(() => {
     if (optionValue) {
-      const filteredTasks:Array<string> = tickets.filter(ticket => ticket.title !== optionValue).map(item => [...item.title].toString());
-      console.log(filteredTasks)
+      const filteredTasks = tickets.filter(ticket => ticket.title !== optionValue)
+
+        setTickets((prev) => [
+          ...filteredTasks
+        ])
     }
     // optionValue &&
     //       tickets.filter(ticket => {
