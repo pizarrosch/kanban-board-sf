@@ -61,34 +61,31 @@ function Column({type}: Props) {
     }
   }
 
+  function saveToLocalStorage(target: string) {
+    const newTickets = [
+      ...tickets,
+      {
+        id: tickets.length,
+        title: target,
+        type: 'backlog',
+        description: 'Some dummy static description that\'s being created for any new ticket'
+      }
+    ];
+    // @ts-ignore
+    setTickets(newTickets);
+    localStorage.setItem('tickets', JSON.stringify(newTickets))
+  }
+
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && e.currentTarget.value !== '') {
-      setTickets([
-        ...tickets,
-        {
-          id: tickets.length,
-          title: e.currentTarget.value,
-          type: 'backlog',
-          description: 'Some dummy static description that\'s being created for any new ticket'
-        }
-      ]);
-
-      setIsInputActive(false);
-      console.log(tickets.map(ticket => ticket.id))
+     saveToLocalStorage(e.currentTarget.value);
+     setIsInputActive(false);
     }
   }
 
   function handleInputOnClick() {
     if (isInputActive) {
-      ref.current && setTickets([
-        ...tickets,
-        {
-          id: tickets.length,
-          title: ref.current!.value,
-          type: 'backlog',
-          description: 'Some dummy static description that\'s being created for any new ticket'
-        }
-      ]);
+      ref.current && saveToLocalStorage(ref.current!.value);
     }
   }
 
@@ -103,7 +100,7 @@ function Column({type}: Props) {
             }
             return ticket;
           })
-        // @ts-ignore
+        localStorage.setItem('tickets', JSON.stringify(newReadyTickets));
         return setTickets(newReadyTickets);
 
       case "progress":
@@ -113,7 +110,8 @@ function Column({type}: Props) {
           }
           return ticket;
         })
-        // @ts-ignore
+
+        localStorage.setItem('tickets', JSON.stringify(newProgressTickets));
         return setTickets(newProgressTickets);
 
       case "finished":
@@ -123,7 +121,8 @@ function Column({type}: Props) {
           }
           return ticket;
         })
-        // @ts-ignore
+
+        localStorage.setItem('tickets', JSON.stringify(newFinishedTickets));
         return setTickets(newFinishedTickets);
     }
   }

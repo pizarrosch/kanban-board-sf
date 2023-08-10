@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import s from './Footer.module.scss';
 import {StoreContext} from "../../App";
 import {type} from "@testing-library/user-event/dist/type";
@@ -6,18 +6,17 @@ import {ColumnType, TicketType} from "../../types";
 
 type Props = {
   type: ColumnType;
-  tickets: Array<TicketType>
+  backlogTaskNumber: number;
+  finishedTaskNumber: number
 }
 
-function Footer({type, tickets}: Props) {
-
-   const backlogTickets = tickets.filter(ticket => type === 'backlog' && ticket);
+function Footer({backlogTaskNumber, type, finishedTaskNumber}: Props) {
 
     return (
         <div className={s.root}>
             <div className={s.tasksCounter}>
-                <span>Active tasks: {backlogTickets ? backlogTickets.length : 0}</span>
-                <span>Finished tasks: {type === 'progress' ? tickets.length : 0}</span>
+                <span>Active tasks: {backlogTaskNumber}</span>
+                <span>Finished tasks: {finishedTaskNumber}</span>
             </div>
             <span className={s.accountHolder}>Kanban board by Name Surname</span>
         </div>
