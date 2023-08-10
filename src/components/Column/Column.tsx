@@ -1,11 +1,8 @@
 import React, {ChangeEvent, KeyboardEvent, useContext, useEffect, useRef, useState} from 'react';
 import Ticket from "../Ticket/Ticket";
 import {StoreContext} from "../../App";
-import {ColumnType} from "../../types";
+import {ColumnType, TicketType} from "../../types";
 import s from "./Column.module.scss";
-import ticket from "../Ticket/Ticket";
-import {logDOM} from "@testing-library/react";
-
 
 type Props = {
   type: ColumnType;
@@ -57,28 +54,19 @@ function Column({type}: Props) {
                   return ticket.type === 'progress';
               }
             })
-            .map(ticket => <option value={ticket.title}>{ticket.title}</option>)
+            .map(ticket => <option value={ticket.id}>{ticket.title}</option>)
           }
         </select>
       )
     }
   }
 
-  // function removeTickets() {
-  //   if (type === "backlog") {
-  //     tickets.filter(ticket => {
-  //       switch (type) {
-  //         case "backlog": return ticket.type !== "ready"
-  //       }
-  //     }).map(ticket => console.log(ticket))
-  //   }
-  // }
-
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && e.currentTarget.value !== '') {
       setTickets([
         ...tickets,
         {
+          id: tickets.length,
           title: e.currentTarget.value,
           type: 'backlog',
           description: 'Some dummy static description that\'s being created for any new ticket'
@@ -86,6 +74,7 @@ function Column({type}: Props) {
       ]);
 
       setIsInputActive(false);
+      console.log(tickets.map(ticket => ticket.id))
     }
   }
 
@@ -94,6 +83,7 @@ function Column({type}: Props) {
       ref.current && setTickets([
         ...tickets,
         {
+          id: tickets.length,
           title: ref.current!.value,
           type: 'backlog',
           description: 'Some dummy static description that\'s being created for any new ticket'
@@ -102,92 +92,39 @@ function Column({type}: Props) {
     }
   }
 
-  // function removeTickets() {
-  //   if (type === 'backlog' ) {
-  //     tickets
-  //       .filter(ticket => ticket.title !== optionValue)
-  //       // .map(ticket => {
-  //       //     setTickets([
-  //       //       {
-  //       //         title: ticket.title,
-  //       //         type: ticket.type,
-  //       //         description: 'Some dummy static description that\'s being created for any new ticket'
-  //       //       }
-  //       //     ])
-  //       //   }
-  //       // )
-  //   }
-  // }
-
-  useEffect(() => {
-    if (optionValue) {
-      const filteredTasks = tickets.filter(ticket => ticket.title !== optionValue)
-
-        setTickets((prev) => [
-          ...filteredTasks
-        ])
-    }
-    // optionValue &&
-    //       tickets.filter(ticket => {
-    //
-    //         return ticket.title !== optionValue && setTickets([
-    //         {
-    //           title: (!optionValue).toString(),
-    //           type: 'backlog',
-    //           description: 'Hello'
-    //         }
-    //       ]);
-    //     })
-
-        // .map(ticket => {
-        //   setTickets([
-        //     ...tickets,
-        //     {
-        //       title: ticket.title,
-        //       type: 'backlog',
-        //       description: 'Some dummy static description that\'s being created for any new ticket'
-        //     }
-        //   ])
-        // })
-  }, [optionValue])
-
   function handleSelect(e: ChangeEvent) {
     isSelectActive && setIsSelectActive(false);
-    const target = e.target as HTMLSelectElement;
-    setOptionValue(target.value);
+    const target = e.target as HTMLOptionElement;
     switch (type) {
       case "ready":
-        return setTickets(
-          [
-            ...tickets,
-            {
-              title: target.value,
-              type: 'ready',
-              description: 'Some dummy static description that\'s being created for any new ticket'
+          const newReadyTickets = tickets.map((ticket, id) => {
+            if (ticket.id === Number(target.value)) {
+              ticket.type = 'ready'
             }
-          ]
-        );
+            return ticket;
+          })
+        // @ts-ignore
+        return setTickets(newReadyTickets);
 
       case "progress":
-        return setTickets(
-          [
-            ...tickets,
-            {
-              title: target.value,
-              type: 'progress',
-              description: 'Some dummy static description that\'s being created for any new ticket'
-            }
-          ]);
+        const newProgressTickets = tickets.map((ticket, id) => {
+          if (ticket.id === Number(target.value)) {
+            ticket.type = 'progress'
+          }
+          return ticket;
+        })
+        // @ts-ignore
+        return setTickets(newProgressTickets);
+
       case "finished":
-        return setTickets(
-          [
-            ...tickets,
-            {
-              title: target.value,
-              type: 'finished',
-              description: 'Some dummy static description that\'s being created for any new ticket'
-            }
-          ]);
+        const newFinishedTickets = tickets.map((ticket, id) => {
+          if (ticket.id === Number(target.value)) {
+            ticket.type = 'finished'
+          }
+          return ticket;
+        })
+        // @ts-ignore
+        return setTickets(newFinishedTickets);
     }
   }
 
@@ -226,7 +163,7 @@ function Column({type}: Props) {
       <div>
         {tickets
           .filter(ticket => ticket.type === type)
-          .map(ticket => <Ticket title={ticket.title} description={ticket.description} type={type}/>
+          .map(ticket => <Ticket title={ticket.title} description={ticket.description} type={type} id={ticket.id}/>
           )}
       </div>
       {isInputActive && renderInput()}

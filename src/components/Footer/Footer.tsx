@@ -11,7 +11,7 @@ type Props = {
 
 function Footer({type, tickets}: Props) {
 
-   const backlogTickets = tickets.map(ticket => type === 'backlog' && ticket);
+   const backlogTickets = tickets.filter(ticket => type === 'backlog' && ticket);
 
     return (
         <div className={s.root}>
