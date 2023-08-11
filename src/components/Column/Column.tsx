@@ -3,6 +3,8 @@ import Ticket from "../Ticket/Ticket";
 import {StoreContext} from "../../App";
 import {ColumnType, TicketType} from "../../types";
 import s from "./Column.module.scss";
+import {Route, Routes} from "react-router";
+import {Link} from "react-router-dom";
 
 type Props = {
   type: ColumnType;
@@ -14,6 +16,20 @@ const titles = {
   progress: 'In Progress',
   finished: 'Finished'
 }
+
+const dummyText = `
+  But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will 
+  give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, 
+  the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, 
+  but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. 
+  Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because 
+  occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, 
+  which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any 
+  right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a
+  pain that produces no resultant pleasure? On the other hand, we denounce with righteous indignation and dislike men 
+  who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot 
+  foresee
+`
 
 function Column({type}: Props) {
   const [isInputActive, setIsInputActive] = useState(false);
@@ -68,12 +84,13 @@ function Column({type}: Props) {
         id: tickets.length,
         title: target,
         type: 'backlog',
-        description: 'Some dummy static description that\'s being created for any new ticket'
+        description: dummyText
       }
     ];
     // @ts-ignore
     setTickets(newTickets);
     localStorage.setItem('tickets', JSON.stringify(newTickets))
+    localStorage.setItem('ticketsCounter', JSON.stringify(newTickets.length))
   }
 
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
@@ -101,6 +118,7 @@ function Column({type}: Props) {
             return ticket;
           })
         localStorage.setItem('tickets', JSON.stringify(newReadyTickets));
+        localStorage.setItem('newReadyTickets', JSON.stringify(newReadyTickets.length))
         return setTickets(newReadyTickets);
 
       case "progress":
@@ -112,6 +130,7 @@ function Column({type}: Props) {
         })
 
         localStorage.setItem('tickets', JSON.stringify(newProgressTickets));
+        localStorage.setItem('newProgressTickets', JSON.stringify(newProgressTickets.length))
         return setTickets(newProgressTickets);
 
       case "finished":
@@ -123,6 +142,7 @@ function Column({type}: Props) {
         })
 
         localStorage.setItem('tickets', JSON.stringify(newFinishedTickets));
+        localStorage.setItem('finishedTicketsCounter', JSON.stringify(newFinishedTickets.length))
         return setTickets(newFinishedTickets);
     }
   }
@@ -157,21 +177,23 @@ function Column({type}: Props) {
   }
 
   return (
-    <div className={s.root} key={type}>
-      <h4 className={s.title}>{titles[type]}</h4>
-      <div>
-        {tickets
-          .filter(ticket => ticket.type === type)
-          .map(ticket => <Ticket title={ticket.title} description={ticket.description} type={type} id={ticket.id}/>
-          )}
+      <div className={s.root} key={type}>
+        <h4 className={s.title}>{titles[type]}</h4>
+        <div>
+          {tickets
+            .filter(ticket => ticket.type === type)
+            .map(ticket => (
+                <Ticket title={ticket.title} description={ticket.description} type={type} id={ticket.id}/>
+              )
+            )}
+        </div>
+        {isInputActive && renderInput()}
+        {isSelectActive && renderSelect()}
+        <div className={s.addCard} onClick={handleIsInputActive}>
+          {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
+          {!isSelectActive && (type !== 'backlog' && '+Add card')}
+        </div>
       </div>
-      {isInputActive && renderInput()}
-      {isSelectActive && renderSelect()}
-      <div className={s.addCard} onClick={handleIsInputActive}>
-        {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
-        {!isSelectActive && (type !== 'backlog' && '+Add card')}
-      </div>
-    </div>
   )
 }
 

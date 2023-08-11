@@ -1,16 +1,14 @@
-import React, {useContext, useState} from 'react';
+import React from 'react';
 import s from './Footer.module.scss';
-import {StoreContext} from "../../App";
-import {type} from "@testing-library/user-event/dist/type";
-import {ColumnType, TicketType} from "../../types";
+import {ColumnType} from "../../types";
 
 type Props = {
   type: ColumnType;
   backlogTaskNumber: number;
-  finishedTaskNumber: number
+  finishedTaskNumber: number;
 }
 
-function Footer({backlogTaskNumber, type, finishedTaskNumber}: Props) {
+function Footer({type, finishedTaskNumber, backlogTaskNumber}: Props) {
 
     return (
         <div className={s.root}>

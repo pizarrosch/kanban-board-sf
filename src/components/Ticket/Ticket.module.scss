@@ -11,6 +11,12 @@
   margin: 0 10px 10px 0;
 }
 
-.title {
-  margin-top: 5px;
+.linkStyle {
+  text-decoration: none;
+  color: black;
+
+  :visited {
+    color: black;
+  }
 }
+
