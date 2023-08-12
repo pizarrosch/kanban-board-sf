@@ -22,6 +22,9 @@
       cursor: pointer;
       font-family: 'Roboto', sans-serif;
       font-size: 18px;
+      border: none;
+      background-color: transparent;
+      text-align: left;
     }
 
     .input {
@@ -36,6 +39,10 @@
 
     .select {
       outline: none;
+    }
+
+    .isDisabled {
+      pointer-events: none;
     }
   }
 

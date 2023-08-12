@@ -17,28 +17,12 @@ const titles = {
   finished: 'Finished'
 }
 
-const dummyText = `
-  But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will 
-  give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, 
-  the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, 
-  but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. 
-  Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because 
-  occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, 
-  which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any 
-  right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a
-  pain that produces no resultant pleasure? On the other hand, we denounce with righteous indignation and dislike men 
-  who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot 
-  foresee
-`
-
 function Column({type}: Props) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isSelectActive, setIsSelectActive] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [optionValue, setOptionValue] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const {tickets, setTickets} = useContext(StoreContext);
-  const ref = useRef<HTMLInputElement|null>(null);
-  const [filteredTickets, setFilteredTickets] = useState<Array<string>>([]);
+  const ref = useRef<HTMLInputElement | null>(null);
 
   function renderInput() {
     if (type === 'backlog') {
@@ -84,7 +68,7 @@ function Column({type}: Props) {
         id: tickets.length,
         title: target,
         type: 'backlog',
-        description: dummyText
+        description: 'No data'
       }
     ];
     // @ts-ignore
@@ -95,8 +79,8 @@ function Column({type}: Props) {
 
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && e.currentTarget.value !== '') {
-     saveToLocalStorage(e.currentTarget.value);
-     setIsInputActive(false);
+      saveToLocalStorage(e.currentTarget.value);
+      setIsInputActive(false);
     }
   }
 
@@ -111,12 +95,12 @@ function Column({type}: Props) {
     const target = e.target as HTMLOptionElement;
     switch (type) {
       case "ready":
-          const newReadyTickets = tickets.map((ticket, id) => {
-            if (ticket.id === Number(target.value)) {
-              ticket.type = 'ready'
-            }
-            return ticket;
-          })
+        const newReadyTickets = tickets.map((ticket, id) => {
+          if (ticket.id === Number(target.value)) {
+            ticket.type = 'ready'
+          }
+          return ticket;
+        })
         localStorage.setItem('tickets', JSON.stringify(newReadyTickets));
         localStorage.setItem('newReadyTickets', JSON.stringify(newReadyTickets.length))
         return setTickets(newReadyTickets);
@@ -147,18 +131,29 @@ function Column({type}: Props) {
     }
   }
 
+  useEffect(() => {
     tickets.map(ticket => {
-      if (ticket.type === 'backlog' && ticket.title === '') {
-        switch (type) {
-          case 'ready':
-            return setIsButtonDisabled(true);
-          case 'progress':
-            return setIsButtonDisabled(true);
-          case 'finished':
-            return setIsButtonDisabled(true);
-        }
+      switch (type) {
+        case "backlog":
+          return setIsButtonDisabled(false);
+        case 'ready':
+          if (ticket.type === 'backlog' && tickets.length !== 0) {
+            setIsButtonDisabled(false);
+          }
+          return;
+        case 'progress':
+          if (ticket.type === 'ready' && tickets.length !== 0) {
+            setIsButtonDisabled(false);
+          }
+          return;
+        case 'finished':
+          if (ticket.type === 'progress' && tickets.length !== 0) {
+            setIsButtonDisabled(false);
+          }
+          return;
       }
     })
+  }, [tickets])
 
   function handleIsInputActive() {
     handleInputOnClick();
@@ -177,23 +172,30 @@ function Column({type}: Props) {
   }
 
   return (
-      <div className={s.root} key={type}>
-        <h4 className={s.title}>{titles[type]}</h4>
-        <div>
-          {tickets
-            .filter(ticket => ticket.type === type)
-            .map(ticket => (
-                <Ticket title={ticket.title} description={ticket.description} type={type} id={ticket.id}/>
-              )
-            )}
-        </div>
-        {isInputActive && renderInput()}
-        {isSelectActive && renderSelect()}
-        <div className={s.addCard} onClick={handleIsInputActive}>
-          {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
-          {!isSelectActive && (type !== 'backlog' && '+Add card')}
-        </div>
+    <div className={s.root} key={type}>
+      <h4 className={s.title}>{titles[type]}</h4>
+      <div>
+        {tickets
+          .filter(ticket => ticket.type === type)
+          .map(ticket => (
+                  // <Link to={`/ticket/${ticket.id}`} className={s.linkStyle}>
+                    <Ticket
+                      title={ticket.title}
+                      description={ticket.description}
+                      type={type}
+                      id={ticket.id}
+                    />
+                  // </Link>
+                )
+          )}
       </div>
+      {isInputActive && renderInput()}
+      {isSelectActive && renderSelect()}
+      <button className={s.addCard} onClick={handleIsInputActive}>
+        {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
+        {!isSelectActive && (type !== 'backlog' && '+Add card')}
+      </button>
+    </div>
   )
 }
 
