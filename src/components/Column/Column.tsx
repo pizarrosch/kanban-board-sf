@@ -66,7 +66,7 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
                   return ticket.type === 'progress';
               }
             })
-            .map(ticket => <option value={ticket.id}>{ticket.title}</option>)
+            .map(ticket => <option value={ticket.id} className={s.option}>{ticket.title}</option>)
           }
         </select>
       )
@@ -87,9 +87,6 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
     setTickets(newTickets);
     // @ts-ignore
     const newBacklogTickets = newTickets.filter(ticket => ticket.type === 'backlog');
-    if (newBacklogTickets.length === 0) {
-      setIsButtonDisabled(true);
-    }
     setBacklogTaskNumber(newBacklogTickets.length);
     localStorage.setItem('tickets', JSON.stringify(newTickets))
     localStorage.setItem('ticketsCounter', JSON.stringify(newBacklogTickets.length))
@@ -103,6 +100,8 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
   }
 
   function handleInputOnClick() {
+    if (ref.current && ref.current!.value === '') return;
+
     if (isInputActive) {
       ref.current && saveToLocalStorage(ref.current!.value);
     }
@@ -142,7 +141,6 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
         })
 
         localStorage.setItem('tickets', JSON.stringify(newProgressTickets));
-        // localStorage.setItem('newProgressTickets', JSON.stringify(newProgressTickets.length))
         return setTickets(newProgressTickets);
 
       case "finished":
@@ -154,7 +152,7 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
         })
         console.log(newFinishedTickets)
         const newFinishedTicketsCounter = newFinishedTickets.filter((ticket, id) => ticket.type === 'finished')
-        setFinishedTaskNumber( newFinishedTicketsCounter.length)
+        setFinishedTaskNumber(newFinishedTicketsCounter.length)
 
         localStorage.setItem('tickets', JSON.stringify(newFinishedTickets));
         localStorage.setItem('finishedCounter', JSON.stringify(newFinishedTicketsCounter.length))

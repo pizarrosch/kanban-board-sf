@@ -19,3 +19,13 @@
 .accountHolder {
   margin-right: 10px;
 }
+
+@media screen and (max-width: 530px) {
+  .root {
+    justify-content: center;
+
+    .accountHolder {
+      display: none;
+    }
+  }
+}

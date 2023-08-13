@@ -1,49 +1,82 @@
-  .root {
-    //margin-left: 20px;
-    width: 282px;
-    height: max-content;
-    display: flex;
-    flex-direction: column;
-    background-color: #EBECF0;
-    border-radius: 6px;
-    padding-left: 10px;
-    padding-right: 10px;
-    box-sizing: border-box;
-    gap: 7px;
+.root {
+  //margin-left: 20px;
+  width: 282px;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  background-color: #EBECF0;
+  border-radius: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-sizing: border-box;
+  gap: 7px;
 
-    .title {
-      font-size: 18px;
-      font-weight: 400;
-      margin: 10px 0;
-    }
-
-    .addCard {
-      color: #5E6C84;
-      cursor: pointer;
-      font-family: 'Roboto', sans-serif;
-      font-size: 18px;
-      border: none;
-      background-color: transparent;
-      text-align: left;
-    }
-
-    .input {
-      height: 35px;
-      box-sizing: border-box;
-      border-radius: 2px;
-      border: none;
-      padding-inline: 10px;
-      width: 100%;
-      outline: none;
-    }
-
-    .select {
-      outline: none;
-    }
-
-    .addCard .isDisabled {
-      pointer-events: none;
-    }
+  .title {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 10px 0;
   }
 
+  .addCard {
+    color: #5E6C84;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+    border-radius: 6px;
+    width: max-content;
+  }
 
+  .addCard:hover {
+    background-color: #0079BF;
+    color: white;
+    transition: background-color 300ms ease-in-out;
+  }
+
+  .input {
+    height: 35px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    border: none;
+    padding-inline: 10px;
+    width: 100%;
+    outline: none;
+  }
+
+  .select {
+    outline: none;
+    border-radius: 6px;
+    background-color: white;
+    border: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    height: 35px;
+    padding-left: 5px;
+    line-height: 50px;
+  }
+
+  .select:hover(:not(:first-child)) {
+    background-color: #0079BF;
+    color: white;
+    transition: background-color 300ms ease-in-out;
+  }
+
+  .addCard .isDisabled {
+    pointer-events: none;
+  }
+}
+
+@media screen and (max-width: 945px) {
+  .root {
+    width: 45%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .root {
+    width: 90%;
+  }
+}

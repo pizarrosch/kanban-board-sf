@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect} from 'react';
+import React from 'react';
 import s from './Footer.module.scss';
 import {ColumnType} from "../../types";
 
@@ -11,15 +11,15 @@ type Props = {
 
 function Footer({finishedTaskNumber, backlogTaskNumber, userName}: Props) {
 
-    return (
-        <div className={s.root}>
-            <div className={s.tasksCounter}>
-                <span>Active tasks: {backlogTaskNumber}</span>
-                <span>Finished tasks: {finishedTaskNumber}</span>
-            </div>
-            <span className={s.accountHolder}>{userName ? `Kanban board by ${userName}` : 'Kanban board by username'}</span>
-        </div>
-    )
+  return (
+    <div className={s.root}>
+      <div className={s.tasksCounter}>
+        <span>Active tasks: {backlogTaskNumber}</span>
+        <span>Finished tasks: {finishedTaskNumber}</span>
+      </div>
+      <span className={s.accountHolder}>{userName ? `Kanban board by ${userName}` : 'Kanban board by username'}</span>
+    </div>
+  )
 }
 
 export default Footer;

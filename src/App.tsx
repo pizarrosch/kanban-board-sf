@@ -24,7 +24,7 @@ function App({type}: Props) {
   const [tickets, setTickets] = useState<Array<TicketType>>([]);
   const [backlogTaskNumber, setBacklogTaskNumber] = useState<number>(0);
   const [finishedTaskNumber, setFinishedTaskNumber] = useState<number>(0);
-  const [userName, setUserName] = useState<string|null>(() => localStorage.getItem('userName'));
+  const [userName, setUserName] = useState<string | null>(() => localStorage.getItem('userName'));
 
   useEffect(() => {
     if (!userName) {
@@ -55,15 +55,15 @@ function App({type}: Props) {
 
   return (
     <div>
-      <Header/>
+      <Header userName={userName}/>
       <StoreContext.Provider value={{tickets, setTickets}}>
         <Routes>
           <Route
             path='dashboard'
             element={
-            <MainContainer
-              setBacklogTaskNumber={setBacklogTaskNumber} setFinishedTaskNumber={setFinishedTaskNumber}/>
-          }/>
+              <MainContainer
+                setBacklogTaskNumber={setBacklogTaskNumber} setFinishedTaskNumber={setFinishedTaskNumber}/>
+            }/>
           {tickets.map(ticket => (
             <Route
               path="/ticket/:ticketId"

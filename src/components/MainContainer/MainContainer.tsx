@@ -2,8 +2,6 @@ import React, {Dispatch, SetStateAction} from 'react';
 import s from './MainContainer.module.scss';
 import Column from "../Column/Column";
 import {Columns} from "../../types";
-import {Route, Routes} from "react-router";
-import {Link} from "react-router-dom";
 
 type Props = {
   setBacklogTaskNumber: Dispatch<SetStateAction<number>>,

@@ -66,7 +66,7 @@ function Description({description}: TicketType) {
 
   return (
     <div className={s.root}>
-      <div className={s.descriptionContainer} >
+      <div className={s.descriptionContainer}>
         <h1 style={{margin: 0}} className={s.descriptionTitle}>{newTitle}</h1>
         {isInputActive ?
           <div className={s.textAreaContainer}>

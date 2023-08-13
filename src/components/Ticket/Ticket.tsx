@@ -1,7 +1,7 @@
 import React from "react";
 import s from './Ticket.module.scss';
 import {TicketType} from "../../types";
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function Ticket({title, id}: TicketType) {
 

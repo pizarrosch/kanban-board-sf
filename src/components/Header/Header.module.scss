@@ -14,3 +14,25 @@
   color: white;
   margin-left: 10px;
 }
+
+.userName {
+  display: none;
+}
+
+
+@media screen and (max-width: 530px) {
+  .root {
+    .headerTitle {
+      display: none;
+    }
+
+    .userName {
+      display: block;
+      font-family: 'Roboto', sans-serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: white;
+      margin-left: 10px;
+    }
+  }
+}
