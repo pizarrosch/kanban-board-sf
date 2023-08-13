@@ -9,7 +9,7 @@ function Description({description}: TicketType) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [savedText, setSavedText] = useState('');
   const [newTitle, setNewTitle] = useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const {tickets} = useContext(StoreContext);
   const {ticketId} = useParams();
 
@@ -69,9 +69,10 @@ function Description({description}: TicketType) {
       <div className={s.descriptionContainer} >
         <h1 style={{margin: 0}} className={s.descriptionTitle}>{newTitle}</h1>
         {isInputActive ?
-          <form onSubmit={saveNewText}>
-            <input type='text' ref={inputRef} className={s.input}/>
-          </form>
+          <div className={s.textAreaContainer}>
+            <textarea ref={inputRef} className={s.input}/>
+            <button className={s.confirmButton} onClick={saveNewText}>Confirm</button>
+          </div>
           :
           <p className={s.descriptionParagraph} onClick={handleIsInputActive}>{savedText || description}</p>
         }

@@ -17,16 +17,42 @@
     font-family: 'Roboto', sans-serif;
     font-size: 24px;
 
-    .input {
-      height: 35px;
-      box-sizing: border-box;
-      border-radius: 2px;
-      border: darkgray 1px solid;
-      padding-inline: 10px;
-      width: 100%;
-      outline: none;
-      margin-top: 30px;
+
+    .textAreaContainer {
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+      width: 501px;
+
+      .input {
+        width: 500px;
+        min-height: 100px;
+        box-sizing: border-box;
+        border-radius: 2px;
+        border: darkgray 1px solid;
+        padding-inline: 10px;
+        outline: none;
+        margin-top: 30px;
+      }
+
+      .confirmButton {
+        width: 80px;
+        height: 35px;
+        border-radius: 6px;
+        border: none;
+        box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+        cursor: pointer;
+        font-family: 'Roboto', sans-serif;
+        align-self: flex-end;
+      }
+
+      .confirmButton:hover {
+        background-color: #0079BF;
+        color: white;
+        transition: background-color 400ms ease-in-out;
+      }
     }
+
 
     .descriptionParagraph {
       width: 620px;

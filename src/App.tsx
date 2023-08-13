@@ -24,9 +24,15 @@ function App({type}: Props) {
   const [tickets, setTickets] = useState<Array<TicketType>>([]);
   const [backlogTaskNumber, setBacklogTaskNumber] = useState<number>(0);
   const [finishedTaskNumber, setFinishedTaskNumber] = useState<number>(0);
-  const [userName, setUserName] = useState('Name Surname');
+  const [userName, setUserName] = useState<string|null>(() => localStorage.getItem('userName'));
 
   useEffect(() => {
+    if (!userName) {
+      const namePrompt = prompt('Please type your name');
+      setUserName(namePrompt);
+      localStorage.setItem('userName', namePrompt!);
+    }
+
     const savedItems = localStorage.getItem('tickets');
     const backlogCounter = localStorage.getItem('ticketsCounter') as string;
     const finishedCounter = localStorage.getItem('finishedCounter') as string;
@@ -75,6 +81,7 @@ function App({type}: Props) {
           type={type}
           backlogTaskNumber={backlogTaskNumber}
           finishedTaskNumber={finishedTaskNumber}
+          userName={userName}
         />
       </StoreContext.Provider>
     </div>

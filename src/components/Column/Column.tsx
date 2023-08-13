@@ -10,10 +10,8 @@ import React, {
 } from 'react';
 import Ticket from "../Ticket/Ticket";
 import {StoreContext} from "../../App";
-import {ColumnType, TicketType} from "../../types";
+import {ColumnType} from "../../types";
 import s from "./Column.module.scss";
-import {Route, Routes} from "react-router";
-import {Link} from "react-router-dom";
 
 type Props = {
   type: ColumnType;
@@ -34,7 +32,7 @@ const titles = {
 function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isSelectActive, setIsSelectActive] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {tickets, setTickets} = useContext(StoreContext);
   const ref = useRef<HTMLInputElement | null>(null);
 
@@ -89,6 +87,9 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
     setTickets(newTickets);
     // @ts-ignore
     const newBacklogTickets = newTickets.filter(ticket => ticket.type === 'backlog');
+    if (newBacklogTickets.length === 0) {
+      setIsButtonDisabled(true);
+    }
     setBacklogTaskNumber(newBacklogTickets.length);
     localStorage.setItem('tickets', JSON.stringify(newTickets))
     localStorage.setItem('ticketsCounter', JSON.stringify(newBacklogTickets.length))
@@ -106,6 +107,12 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
       ref.current && saveToLocalStorage(ref.current!.value);
     }
   }
+
+  useEffect(() => {
+    if (isInputActive) {
+      ref.current && ref.current.focus();
+    }
+  }, [isInputActive]);
 
   function handleSelect(e: ChangeEvent) {
     isSelectActive && setIsSelectActive(false);
@@ -213,7 +220,7 @@ function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
       </div>
       {isInputActive && renderInput()}
       {isSelectActive && renderSelect()}
-      <button className={s.addCard} onClick={handleIsInputActive}>
+      <button className={s.addCard} onClick={handleIsInputActive} disabled={isButtonDisabled}>
         {isInputActive ? (type === 'backlog' && 'Submit') : type === 'backlog' && '+Add card'}
         {!isSelectActive && (type !== 'backlog' && '+Add card')}
       </button>

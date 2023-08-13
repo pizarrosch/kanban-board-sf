@@ -6,19 +6,10 @@ type Props = {
   type: ColumnType;
   backlogTaskNumber: number;
   finishedTaskNumber: number;
+  userName: string | null;
 }
 
-function Footer({type, finishedTaskNumber, backlogTaskNumber}: Props) {
-
-  // useEffect(() => {
-  //   const backlogCounter = JSON.parse(localStorage.getItem('ticketsCounter') as string);
-  //   const finishedCounter = JSON.parse(localStorage.getItem('finishedTicketsCounter') as string);
-  //
-  //   switch (type) {
-  //     case "backlog": setBacklogTaskNumber(backlogCounter.length);
-  //     case "finished": setFinishedTaskNumber(finishedCounter.length);
-  //   }
-  // }, [finishedTaskNumber, backlogTaskNumber]);
+function Footer({finishedTaskNumber, backlogTaskNumber, userName}: Props) {
 
     return (
         <div className={s.root}>
@@ -26,7 +17,7 @@ function Footer({type, finishedTaskNumber, backlogTaskNumber}: Props) {
                 <span>Active tasks: {backlogTaskNumber}</span>
                 <span>Finished tasks: {finishedTaskNumber}</span>
             </div>
-            <span className={s.accountHolder}>Kanban board by Name Surname</span>
+            <span className={s.accountHolder}>{userName ? `Kanban board by ${userName}` : 'Kanban board by username'}</span>
         </div>
     )
 }
