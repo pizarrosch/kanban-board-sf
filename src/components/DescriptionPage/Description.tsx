@@ -4,18 +4,24 @@ import s from './Description.module.scss';
 import {Link, useParams} from "react-router-dom";
 import {StoreContext} from "../../App";
 
-function Description({title, description}: TicketType) {
+function Description({description}: TicketType) {
 
   const [isInputActive, setIsInputActive] = useState(false);
   const [savedText, setSavedText] = useState('');
   const [newTitle, setNewTitle] = useState('');
-  const inputRef = useRef<HTMLInputElement|null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const {tickets} = useContext(StoreContext);
   const {ticketId} = useParams();
 
   function handleIsInputActive() {
     setIsInputActive(true);
   }
+
+  useEffect(() => {
+    if (isInputActive) {
+      inputRef.current && inputRef.current.focus();
+    }
+  }, [isInputActive]);
 
   function saveNewText() {
     if (inputRef.current!.value !== '') {
@@ -60,14 +66,14 @@ function Description({title, description}: TicketType) {
 
   return (
     <div className={s.root}>
-      <div className={s.descriptionContainer} onClick={handleIsInputActive} >
+      <div className={s.descriptionContainer} >
         <h1 style={{margin: 0}} className={s.descriptionTitle}>{newTitle}</h1>
         {isInputActive ?
           <form onSubmit={saveNewText}>
-            <input type='text' ref={inputRef} />
+            <input type='text' ref={inputRef} className={s.input}/>
           </form>
           :
-          <p className={s.descriptionParagraph} >{savedText || description}</p>
+          <p className={s.descriptionParagraph} onClick={handleIsInputActive}>{savedText || description}</p>
         }
         <Link to={'/dashboard'}>
           <div className={s.closeButton}>

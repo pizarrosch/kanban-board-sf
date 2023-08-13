@@ -22,15 +22,28 @@ type Props = {
 
 function App({type}: Props) {
   const [tickets, setTickets] = useState<Array<TicketType>>([]);
-  const [backlogTaskNumber, setBacklogTaskNumber] = useState(0);
-  const [finishedTaskNumber, setFinishedTaskNumber] = useState(0);
+  const [backlogTaskNumber, setBacklogTaskNumber] = useState<number>(0);
+  const [finishedTaskNumber, setFinishedTaskNumber] = useState<number>(0);
+  const [userName, setUserName] = useState('Name Surname');
 
   useEffect(() => {
     const savedItems = localStorage.getItem('tickets');
+    const backlogCounter = localStorage.getItem('ticketsCounter') as string;
+    const finishedCounter = localStorage.getItem('finishedCounter') as string;
 
     if (savedItems) {
       const parsedItems = JSON.parse(savedItems);
       setTickets(parsedItems)
+    }
+
+    if (backlogCounter) {
+      const parsedBacklogCounter = JSON.parse(backlogCounter);
+      setBacklogTaskNumber(parsedBacklogCounter);
+    }
+
+    if (finishedCounter) {
+      const parsedFinishedCounter = JSON.parse(finishedCounter);
+      setFinishedTaskNumber(parsedFinishedCounter);
     }
   }, [])
 
@@ -39,21 +52,30 @@ function App({type}: Props) {
       <Header/>
       <StoreContext.Provider value={{tickets, setTickets}}>
         <Routes>
-          <Route path='dashboard' element={<MainContainer />}/>
+          <Route
+            path='dashboard'
+            element={
+            <MainContainer
+              setBacklogTaskNumber={setBacklogTaskNumber} setFinishedTaskNumber={setFinishedTaskNumber}/>
+          }/>
           {tickets.map(ticket => (
             <Route
               path="/ticket/:ticketId"
               element={
-              <Description
-                title={ticket.title}
-                description={ticket.description}
-                type={ticket.type}
-                id={ticket.id}
-              />}
+                <Description
+                  title={ticket.title}
+                  description={ticket.description}
+                  type={ticket.type}
+                  id={ticket.id}
+                />}
             />
           ))}
         </Routes>
-        <Footer type={type} backlogTaskNumber={backlogTaskNumber} finishedTaskNumber={finishedTaskNumber}/>
+        <Footer
+          type={type}
+          backlogTaskNumber={backlogTaskNumber}
+          finishedTaskNumber={finishedTaskNumber}
+        />
       </StoreContext.Provider>
     </div>
   );

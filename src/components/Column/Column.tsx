@@ -1,4 +1,13 @@
-import React, {ChangeEvent, KeyboardEvent, useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  ChangeEvent,
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import Ticket from "../Ticket/Ticket";
 import {StoreContext} from "../../App";
 import {ColumnType, TicketType} from "../../types";
@@ -8,6 +17,11 @@ import {Link} from "react-router-dom";
 
 type Props = {
   type: ColumnType;
+} & CounterProps
+
+type CounterProps = {
+  setBacklogTaskNumber: Dispatch<SetStateAction<number>>,
+  setFinishedTaskNumber: Dispatch<SetStateAction<number>>
 }
 
 const titles = {
@@ -17,7 +31,7 @@ const titles = {
   finished: 'Finished'
 }
 
-function Column({type}: Props) {
+function Column({type, setBacklogTaskNumber, setFinishedTaskNumber}: Props) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isSelectActive, setIsSelectActive] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -68,13 +82,16 @@ function Column({type}: Props) {
         id: tickets.length,
         title: target,
         type: 'backlog',
-        description: 'No data'
+        description: 'This task has no description'
       }
     ];
     // @ts-ignore
     setTickets(newTickets);
+    // @ts-ignore
+    const newBacklogTickets = newTickets.filter(ticket => ticket.type === 'backlog');
+    setBacklogTaskNumber(newBacklogTickets.length);
     localStorage.setItem('tickets', JSON.stringify(newTickets))
-    localStorage.setItem('ticketsCounter', JSON.stringify(newTickets.length))
+    localStorage.setItem('ticketsCounter', JSON.stringify(newBacklogTickets.length))
   }
 
   function handleInput(e: KeyboardEvent<HTMLInputElement>) {
@@ -97,12 +114,16 @@ function Column({type}: Props) {
       case "ready":
         const newReadyTickets = tickets.map((ticket, id) => {
           if (ticket.id === Number(target.value)) {
-            ticket.type = 'ready'
+            ticket.type = 'ready';
           }
           return ticket;
         })
+
+        const newBacklogTickets = tickets.filter((ticket, id) => ticket.id !== Number(target.value) && ticket.type === 'backlog')
+        setBacklogTaskNumber(newBacklogTickets.length)
+
         localStorage.setItem('tickets', JSON.stringify(newReadyTickets));
-        localStorage.setItem('newReadyTickets', JSON.stringify(newReadyTickets.length))
+        localStorage.setItem('ticketsCounter', JSON.stringify(newBacklogTickets.length))
         return setTickets(newReadyTickets);
 
       case "progress":
@@ -114,7 +135,7 @@ function Column({type}: Props) {
         })
 
         localStorage.setItem('tickets', JSON.stringify(newProgressTickets));
-        localStorage.setItem('newProgressTickets', JSON.stringify(newProgressTickets.length))
+        // localStorage.setItem('newProgressTickets', JSON.stringify(newProgressTickets.length))
         return setTickets(newProgressTickets);
 
       case "finished":
@@ -124,9 +145,12 @@ function Column({type}: Props) {
           }
           return ticket;
         })
+        console.log(newFinishedTickets)
+        const newFinishedTicketsCounter = newFinishedTickets.filter((ticket, id) => ticket.type === 'finished')
+        setFinishedTaskNumber( newFinishedTicketsCounter.length)
 
         localStorage.setItem('tickets', JSON.stringify(newFinishedTickets));
-        localStorage.setItem('finishedTicketsCounter', JSON.stringify(newFinishedTickets.length))
+        localStorage.setItem('finishedCounter', JSON.stringify(newFinishedTicketsCounter.length))
         return setTickets(newFinishedTickets);
     }
   }
@@ -178,15 +202,13 @@ function Column({type}: Props) {
         {tickets
           .filter(ticket => ticket.type === type)
           .map(ticket => (
-                  // <Link to={`/ticket/${ticket.id}`} className={s.linkStyle}>
-                    <Ticket
-                      title={ticket.title}
-                      description={ticket.description}
-                      type={type}
-                      id={ticket.id}
-                    />
-                  // </Link>
-                )
+              <Ticket
+                title={ticket.title}
+                description={ticket.description}
+                type={type}
+                id={ticket.id}
+              />
+            )
           )}
       </div>
       {isInputActive && renderInput()}

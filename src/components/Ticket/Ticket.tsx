@@ -8,7 +8,7 @@ function Ticket({title, id}: TicketType) {
   return (
     <Link to={`/ticket/${id}`} className={s.linkStyle}>
       <div className={s.root} key={id}>
-          {title}
+        {title}
       </div>
     </Link>
   )

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction, useEffect} from 'react';
 import s from './Footer.module.scss';
 import {ColumnType} from "../../types";
 
@@ -9,6 +9,16 @@ type Props = {
 }
 
 function Footer({type, finishedTaskNumber, backlogTaskNumber}: Props) {
+
+  // useEffect(() => {
+  //   const backlogCounter = JSON.parse(localStorage.getItem('ticketsCounter') as string);
+  //   const finishedCounter = JSON.parse(localStorage.getItem('finishedTicketsCounter') as string);
+  //
+  //   switch (type) {
+  //     case "backlog": setBacklogTaskNumber(backlogCounter.length);
+  //     case "finished": setFinishedTaskNumber(finishedCounter.length);
+  //   }
+  // }, [finishedTaskNumber, backlogTaskNumber]);
 
     return (
         <div className={s.root}>
