@@ -3,7 +3,7 @@ import Header from "./components/Header/Header";
 import MainContainer from "./components/MainContainer/MainContainer";
 import Footer from "./components/Footer/Footer";
 import {ColumnType, TicketType} from "./types";
-import {Route, Routes} from "react-router";
+import {Navigate, Route, Routes} from "react-router";
 import Description from "./components/DescriptionPage/Description";
 
 type ContextType = {
@@ -58,6 +58,7 @@ function App({type}: Props) {
       <Header userName={userName}/>
       <StoreContext.Provider value={{tickets, setTickets}}>
         <Routes>
+          <Route path='/' element={<Navigate to='/dashboard' />} />
           <Route
             path='dashboard'
             element={
